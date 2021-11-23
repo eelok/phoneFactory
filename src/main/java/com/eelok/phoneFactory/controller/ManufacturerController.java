@@ -1,7 +1,9 @@
 package com.eelok.phoneFactory.controller;
 
 import com.eelok.phoneFactory.model.Manufacturer;
+import com.eelok.phoneFactory.model.Phone;
 import com.eelok.phoneFactory.service.ManufacturerService;
+import com.eelok.phoneFactory.service.PhoneService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,14 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("manufacturer")
 public class ManufacturerController {
     private ManufacturerService manufacturerService;
+    private PhoneService phoneService;
 
-    public ManufacturerController(ManufacturerService manufacturerService) {
+    public ManufacturerController(ManufacturerService manufacturerService, PhoneService phoneService) {
         this.manufacturerService = manufacturerService;
+        this.phoneService = phoneService;
     }
 
     @PostMapping(
@@ -47,5 +52,15 @@ public class ManufacturerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(manufacturerDB, HttpStatus.OK);
+    }
+
+    @GetMapping(
+            value = "/{manufacturerId}/phones",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> findAllPhonesByManufacturerId(@PathVariable long manufacturerId){
+        List<Phone> listOfPhones = this.phoneService.findAllPhonesByManufacturerId(manufacturerId);
+        return new ResponseEntity<>(listOfPhones, HttpStatus.OK);
     }
 }

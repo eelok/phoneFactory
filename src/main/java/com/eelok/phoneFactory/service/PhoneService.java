@@ -34,6 +34,10 @@ public class PhoneService {
         Phone savedPhone = this.phoneRepository.save(phone);
         return this.customModelMapper.mapPhoneToPhoneDTO(savedPhone);
     }
+
+    public List<Phone> findAllPhonesByManufacturerId(long manufacturerId){
+        return this.phoneRepository.findAllByManufacturerId(manufacturerId);
+    }
     
     private boolean phoneNameIsExists(Phone phone){
         List<Phone> allPhones = this.phoneRepository.findAllByName(phone.getName());

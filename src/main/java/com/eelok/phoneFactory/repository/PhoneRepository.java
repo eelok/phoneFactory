@@ -13,4 +13,6 @@ public interface PhoneRepository extends JpaRepository<Phone, Long> {
 
     List<Phone> findAllByName(String name);
 
+    List<Phone> findAllByManufacturerId(long manufacturerId);
+
 }
