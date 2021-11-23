@@ -8,4 +8,7 @@ public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long
     Manufacturer save(Manufacturer manufacturer);
 
     Manufacturer findById(long manufacturerId);
+
+    @Override
+    void delete(Manufacturer manufacturer);
 }

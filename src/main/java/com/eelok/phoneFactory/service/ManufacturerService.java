@@ -13,11 +13,19 @@ public class ManufacturerService {
         this.manufacturerRepository = manufacturerRepository;
     }
 
-    public Manufacturer saveManufacturer(Manufacturer manufacturer){
+    public Manufacturer saveManufacturer(Manufacturer manufacturer) {
         return manufacturerRepository.save(manufacturer);
     }
 
-    public Manufacturer findManufacturerById(long manufacturerId){
-        return manufacturerRepository.findById(manufacturerId);
+    public Manufacturer findManufacturerById(long manufacturerId) throws Exception {
+        Manufacturer manufacturerDB = manufacturerRepository.findById(manufacturerId);
+        if (manufacturerDB == null) {
+            throw new Exception(String.format("manufacturer with id= %d is now found", manufacturerId));
+        }
+        return manufacturerDB;
+    }
+
+    public void deleteManufacturer(Manufacturer manufacturer){
+        this.manufacturerRepository.delete(manufacturer);
     }
 }

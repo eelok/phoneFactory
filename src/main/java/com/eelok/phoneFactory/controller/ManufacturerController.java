@@ -47,11 +47,12 @@ public class ManufacturerController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getManufacturer(@PathVariable long id) {
-        Manufacturer manufacturerDB = manufacturerService.findManufacturerById(id);
-        if (manufacturerDB == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            Manufacturer manufacturerDB = manufacturerService.findManufacturerById(id);
+            return new ResponseEntity<>(manufacturerDB, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(manufacturerDB, HttpStatus.OK);
     }
 
     @GetMapping(
@@ -59,8 +60,19 @@ public class ManufacturerController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> findAllPhonesByManufacturerId(@PathVariable long manufacturerId){
+    public ResponseEntity<?> findAllPhonesByManufacturerId(@PathVariable long manufacturerId) {
         List<Phone> listOfPhones = this.phoneService.findAllPhonesByManufacturerId(manufacturerId);
         return new ResponseEntity<>(listOfPhones, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<?> deleteManufacturer(@PathVariable long id) {
+        try {
+            Manufacturer manufacturerDB = this.manufacturerService.findManufacturerById(id);
+            this.manufacturerService.deleteManufacturer(manufacturerDB);
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
     }
 }
