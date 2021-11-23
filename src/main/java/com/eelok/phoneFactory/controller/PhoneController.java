@@ -27,20 +27,18 @@ public class PhoneController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> savePhoneByManufacturerId(@PathVariable long id, @RequestBody PhoneDTO phoneDTO) {
-        PhoneDTO phoneDTOForReturn = null;
         try {
-            phoneDTOForReturn = this.phoneService.savePhone(phoneDTO, id);
+            PhoneDTO phoneDTOForReturn = this.phoneService.savePhone(phoneDTO, id);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(phoneDTOForReturn.getId())
+                    .toUri();
+            httpHeaders.setLocation(location);
+            return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        HttpHeaders httpHeaders = new HttpHeaders();
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(phoneDTOForReturn.getId())
-                .toUri();
-        httpHeaders.setLocation(location);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
-
 }
